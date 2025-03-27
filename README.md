@@ -1,4 +1,4 @@
-Este proyecto fue realizado con el IDE de apache netbeans JDK 24
+Este proyecto fue realizado con el IDE de apache netbeans JDK 24 y mysql 8.0
 Las credenciales para ingresar al perfil de administrador son: ileana@gmail.com y la contraseña es 123456 y para almacenista es carlos@gmail.com y la contraseña es 123456
 
 El sistema funciona basicamente ingresando con las credenciales y asi dependiendo el rol aparcera un menú correspondiente al usuario
