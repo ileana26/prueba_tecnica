@@ -1,0 +1,132 @@
+create database productos;
+use productos;
+
+create table productos (
+idProducto int not null auto_increment primary key,
+nombre varchar(40),
+precio decimal(16,2)
+);
+
+SET FOREIGN_KEY_CHECKS=0;
+
+create table ventas (
+idVenta int not null auto_increment primary key,
+idProducto int not null,
+cantidad int (6),
+foreign key (idProducto) references productos(idProducto)
+);
+
+select * from ventas;
+select * from productos;
+select * from ventas;
+
+insert into productos values (1,"laptop", 3000.00);
+insert into productos values (2,"pc", 4000.00);
+insert into productos values (3,"mouse", 100.00);
+insert into productos values (4,"teclado", 150.00);
+insert into productos values (5,"monitor", 2000.00);
+insert into productos values (6,"microfono", 350.00);
+insert into productos values (7,"audifonos", 450.00);
+
+insert into ventas values (1,5,8);
+insert into ventas values (2,1,15);
+insert into ventas values (3,6,13);
+insert into ventas values (4,6,4);
+insert into ventas values (5,2,3);
+insert into ventas values (6,5,1);
+insert into ventas values (7,4,5);
+insert into ventas values (8,2,5);
+insert into ventas values (9,6,2);
+insert into ventas values (10,1,8);
+
+/*traer todos los productos que tengan una venta*/
+select p.nombre, 
+v.cantidad as cantidad_vendidas
+from productos as p inner join ventas as v on p.idProducto = v.idProducto 
+where v.cantidad = 1;
+
+
+/*Traer todos los productos que tengan ventas y la cantidad total de productos vendidos.*/
+select p.nombre, 
+v.cantidad as cantidad_vendidas
+from productos as p inner join ventas as v on p.idProducto = v.idProducto;
+
+/*Traer todos los productos (independientemente de si tienen ventas o no) y la suma total ($) vendida por
+producto.*/
+select p.nombre, 
+SUM(p.precio*v.cantidad) as Total
+from productos as p left join ventas as v on p.idProducto = v.idProducto
+group by p.nombre;
+
+/*tabla usuarios*/
+create table usuarios(
+idUsuario int not null auto_increment primary key,
+nombre varchar(100),
+correo varchar(50),
+contrasenia varchar(25),
+idRol int(2),
+estatus int (1)
+);
+
+insert into usuarios values (1,"Ileana Rivera", "ileana@gmail.com", "123456", 1, 1);
+insert into usuarios values (2,"Carlos Chavez", "carlos@gmail.com", "123456", 2, 1);
+select * from usuarios;
+
+create table rol(
+idRol int(2),
+rol varchar(20)
+);
+
+insert into rol values (1,"adminstrador");
+insert into rol values (2,"almacenista");
+select * from rol;
+
+create table inventario(
+idProducto int not null auto_increment primary key,
+producto varchar(200),
+cantidad int(3),
+productos_salida int(6),
+estatus varchar(1)
+);
+
+create table salidasP(
+fecha varchar(100)
+);
+
+drop table salidasP;
+
+insert into inventario values (1,"laptop",1000,0,1);
+insert into inventario values (4,"teclado",390,0,1);
+insert into inventario values (5,"monitor",8907,0,0);
+insert into inventario values (6,"microfono",100,0,1);
+insert into inventario values (2,"pc",6580,0,0);
+select * from inventario;
+select * from productos;
+
+select c.idRol from rol as c
+inner join usuarios as p on  c.idRol = p.idRol where p.correo="ileana@gmail.com";
+
+/*mostrar todos los productos*/
+select p.nombre, i.cantidad, p.precio as "Precio por unidad" from productos as p
+inner join inventario as i on p.idProducto = i.idProducto;
+
+/*mostrar todos los productos activos*/
+select p.nombre, i.cantidad, i.estatus from productos as p
+inner join inventario as i on p.idProducto = i.idProducto where i.estatus=1;
+
+/*actualizar producto*/
+update inventario, productos set inventario.cantidad=1 and inventario.estatus=0 where producto.idProducto = inventario.idProducto;
+
+/*actualizar producto admin*/
+update inventario, productos set productos.nombre = "", inventario.cantidad=1, inventario.estatus=0, producto.precio=1 where producto.idProducto = 1;
+
+/*agregar producto*/
+INSERT INTO productos (nombre, cantidad, precio, estatus)
+SELECT t1.nombre, t2.cantidad, t1.precio, t2,estatus
+FROM productos t1
+INNER JOIN inventario t2
+ON t1.idProducto = t2.idProducto;
+
+
+select * from inventario;
+select * from salidasP;
